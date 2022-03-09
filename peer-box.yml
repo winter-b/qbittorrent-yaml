@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: peer-box
+  labels:
+    app: peer-box
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: peer-box
+  template:
+    metadata:
+      labels:
+        app: peer-box
+    spec:
+      containers:
+        - name: peer-box
+          image: linuxserver/qbittorrent
+          ports:
+            - name: peer-box-port
+              containerPort: 8080
+
+---
+        
+apiVersion: v1
+kind: Service
+metadata:
+  name: peer-box
+  labels:
+    run: peer-box
+spec:
+  type: NodePort
+  selector:
+    app: peer-box
+  ports:
+  - name: peer-box-port
+    port: 8080
+    targetPort: 8080
+    nodePort: 30007
+    protocol: TCP
+    
